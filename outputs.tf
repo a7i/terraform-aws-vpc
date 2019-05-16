@@ -151,20 +151,20 @@ output "private_route_table_ids" {
 
 output "database_route_table_ids" {
   description = "List of IDs of database route tables"
-  value       = coalescelist(aws_route_table.database.*.id, aws_route_table.private.*.id)
+  value       = compact(concat(aws_route_table.database.*.id, aws_route_table.private.*.id))
 }
 
 output "redshift_route_table_ids" {
   description = "List of IDs of redshift route tables"
-  value       = coalescelist(aws_route_table.redshift.*.id, aws_route_table.private.*.id)
+  value       = compact(concat(aws_route_table.redshift.*.id, aws_route_table.private.*.id))
 }
 
 output "elasticache_route_table_ids" {
   description = "List of IDs of elasticache route tables"
-  value = coalescelist(
+  value = compact(concat(
     aws_route_table.elasticache.*.id,
     aws_route_table.private.*.id,
-  )
+  ))
 }
 
 output "intra_route_table_ids" {
@@ -253,25 +253,25 @@ output "default_vpc_enable_dns_hostnames" {
   value       = element(concat(aws_default_vpc.this.*.enable_dns_hostnames, [""]), 0)
 }
 
-//output "default_vpc_enable_classiclink" {
-//  description = "Whether or not the VPC has Classiclink enabled"
-//  value       = "${element(concat(aws_default_vpc.this.*.enable_classiclink, list("")), 0)}"
-//}
+output "default_vpc_enable_classiclink" {
+  description = "Whether or not the VPC has Classiclink enabled"
+  value       = "${element(concat(aws_default_vpc.this.*.enable_classiclink, list("")), 0)}"
+}
 
 output "default_vpc_main_route_table_id" {
   description = "The ID of the main route table associated with this VPC"
   value       = element(concat(aws_default_vpc.this.*.main_route_table_id, [""]), 0)
 }
 
-//output "default_vpc_ipv6_association_id" {
-//  description = "The association ID for the IPv6 CIDR block"
-//  value       = "${element(concat(aws_default_vpc.this.*.ipv6_association_id, list("")), 0)}"
-//}
-//
-//output "default_vpc_ipv6_cidr_block" {
-//  description = "The IPv6 CIDR block"
-//  value       = "${element(concat(aws_default_vpc.this.*.ipv6_cidr_block, list("")), 0)}"
-//}
+output "default_vpc_ipv6_association_id" {
+  description = "The association ID for the IPv6 CIDR block"
+  value       = "${element(concat(aws_default_vpc.this.*.ipv6_association_id, list("")), 0)}"
+}
+
+output "default_vpc_ipv6_cidr_block" {
+  description = "The IPv6 CIDR block"
+  value       = "${element(concat(aws_default_vpc.this.*.ipv6_cidr_block, list("")), 0)}"
+}
 
 # VPC Endpoints
 output "vpc_endpoint_s3_id" {
@@ -359,4 +359,3 @@ output "azs" {
   description = "A list of availability zones specified as argument to this module"
   value       = var.azs
 }
-
